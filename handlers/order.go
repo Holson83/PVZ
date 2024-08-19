@@ -6,30 +6,30 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo/v4"
-
-	"gorm.io/gorm"
-
-	"gorm.io/driver/sqlite"
-
-	"strconv"
+	//"gorm.io/gorm"
+	//"gorm.io/driver/sqlite"
+	//"strconv"
+	"PVZ/database"
 )
 
-var db *gorm.DB
-var err error
+// var db *gorm.DB
+// var err error
 
-func Init() {
-	db, err = gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
-	if err != nil {
-		panic("failed to connect database")
-	}
+var db = database.GetDBConnection()
 
-	db.AutoMigrate(&models.Order{})
-}
+// func Init() {
+// 	db, err = gorm.Open(sqlite.Open("orders.db"), &gorm.Config{})
+// 	if err != nil {
+// 		panic("failed to connect database")
+// 	}
 
-func StringToUint(s string) uint {
-	i, _ := strconv.Atoi(s)
-	return uint(i)
-}
+// 	db.AutoMigrate(&models.Order{})
+// }
+
+// func StringToUint(s string) uint {
+// 	i, _ := strconv.Atoi(s)
+// 	return uint(i)
+// }
 
 func GetAllOrders(c echo.Context) error {
 	var orders []models.Order
@@ -42,23 +42,31 @@ func GetAllOrders(c echo.Context) error {
 func GetAllOrdersId(c echo.Context) error {
 	var order models.Order
 
-	db.Last(&order, c.Param("id"))
+	//db.Last(&order, c.Param("id"))
+
+	db.Take(&order, c.Param("id"))
+
+	if order.ID == 0 {
+		return c.NoContent(http.StatusNotFound)
+	}
 
 	return c.JSON(http.StatusOK, order)
 }
 
 func PostAllOrders(c echo.Context) error {
 	fullName := c.FormValue("fullName")
-	id := StringToUint(c.FormValue("id"))
+	// id := StringToUint(c.FormValue("id"))
+	// status := StringToUint(c.FormValue("status"))
 
-	var existingRecord models.Order
-	db.Take(&existingRecord, id)
+	//var existingRecord models.Order
+	//db.Take(&existingRecord, id)
 
-	if id == existingRecord.ID {
-		return c.String(http.StatusBadRequest, "Order not created")
-	}
+	// if id == existingRecord.ID {
+	// 	return c.String(http.StatusBadRequest, "Order not created")
+	// }
 
-	order := models.Order{FullName: fullName, ID: id}
+	order := models.Order{FullName: fullName}
+
 	db.Create(&order)
 	return c.String(http.StatusCreated, "Order created")
 
@@ -66,34 +74,37 @@ func PostAllOrders(c echo.Context) error {
 }
 
 func DeleleOrder(c echo.Context) error {
-	id := StringToUint(c.FormValue("id"))
+	//id := StringToUint(c.FormValue("id"))
 
-	var record models.Order
-	db.Take(&record, id)
+	var order models.Order
 
-	if id != record.ID {
+	db.Take(&order, c.Param("id"))
+
+	if order.ID == 0 {
 		return c.String(http.StatusBadRequest, "Not found order")
 	}
 
-	order := models.Order{ID: id}
 	db.Delete(&order)
 	return c.String(http.StatusOK, "Delete Order")
 }
 
 func UpdateOrder(c echo.Context) error {
-	fullName := c.FormValue("fullName")
-	id := StringToUint(c.FormValue("id"))
+	//fullName := c.FormValue("fullName")
+	// id := StringToUint(c.FormValue("id"))
+	// status := StringToUint(c.FormValue("status"))
 
-	var urecord models.Order
-	db.Take(&urecord, id)
+	var order models.Order
+	db.Take(&order, c.Param("id"))
 
-	if id != urecord.ID {
+	if order.ID == 0 {
 		return c.String(http.StatusBadRequest, "Not found order")
 	}
 
-	order := models.Order{FullName: fullName, ID: id}
+	//order := models.Order{FullName: fullName, ID: id, Status: status}
+
+	order.FullName = c.FormValue("fullName")
 
 	db.Save(&order)
 
-	return c.String(http.StatusOK, "Update Order")
+	return c.JSON(http.StatusOK, order)
 }

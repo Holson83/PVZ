@@ -6,6 +6,8 @@ import (
 
 type Order struct {
 	gorm.Model
-	ID       uint
+	ID uint
+	//Status   uint
 	FullName string
+	//ID_product uint
 }

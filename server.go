@@ -12,7 +12,7 @@ import (
 )
 
 func main() {
-	handlers.Init()
+	//handlers.Init()
 
 	e := echo.New()
 
