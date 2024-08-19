@@ -30,7 +30,6 @@ func GetOrderId(c echo.Context) error {
 
 func PostOrder(c echo.Context) error {
 	fullName := c.FormValue("fullName")
-	status := 
 
 	order := models.Order{FullName: fullName}
 

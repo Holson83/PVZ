@@ -37,7 +37,7 @@ func PostProduct(c echo.Context) error {
 	product := models.Product{Name: name, Priсe: price}
 
 	db.Create(&product)
-	return c.String(http.StatusCreated, "Order created")
+	return c.String(http.StatusCreated, "Product created")
 }
 
 func UpdateProduct(c echo.Context) error {
@@ -45,7 +45,7 @@ func UpdateProduct(c echo.Context) error {
 	db.Take(&product, c.Param("id"), c.Param("priсe"))
 
 	if product.ID == 0 {
-		return c.String(http.StatusBadRequest, "Not found order")
+		return c.String(http.StatusBadRequest, "Not found product")
 	}
 
 	product.Name = c.FormValue("name")
@@ -62,9 +62,9 @@ func DeleleProduct(c echo.Context) error {
 	db.Take(&product, c.Param("id"))
 
 	if product.ID == 0 {
-		return c.String(http.StatusBadRequest, "Not found order")
+		return c.String(http.StatusBadRequest, "Not found product")
 	}
 
 	db.Delete(&product)
-	return c.String(http.StatusOK, "Delete Order")
+	return c.String(http.StatusOK, "Delete product")
 }
