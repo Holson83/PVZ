@@ -4,6 +4,7 @@ import (
 	"PVZ/models"
 
 	"gorm.io/driver/sqlite"
+
 	"gorm.io/gorm"
 )
 
@@ -24,7 +25,7 @@ func connectDB() *gorm.DB {
 		panic("failed to connect database")
 	}
 
-	_ = db.AutoMigrate(&models.Order{})
+	_ = db.AutoMigrate(&models.Order{}, &models.Product{}, &models.Status{})
 
 	dbConnection = db
 

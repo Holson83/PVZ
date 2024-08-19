@@ -3,28 +3,29 @@ package main
 import (
 	"PVZ/handlers"
 
-	//"net/http"
-
 	"github.com/labstack/echo/v4"
-	// "gorm.io/driver/sqlite"
-	// "gorm.io/gorm"
-	// "strconv"
 )
 
 func main() {
-	//handlers.Init()
-
 	e := echo.New()
 
-	e.GET("/orders", handlers.GetAllOrders)
-
-	e.GET("/orders/:id", handlers.GetAllOrdersId)
-
-	e.POST("/orders", handlers.PostAllOrders)
-
+	e.GET("/orders", handlers.GetAllOrder)
+	e.GET("/orders/:id", handlers.GetOrderId)
+	e.POST("/orders", handlers.PostOrder)
 	e.DELETE("/orders", handlers.DeleleOrder)
+	e.PUT("/orders/:id", handlers.UpdateOrder)
 
-	e.PUT("/orders", handlers.UpdateOrder)
+	e.GET("/products", handlers.GetAllProduct)
+	e.GET("/products/:id", handlers.GetProductId)
+	e.POST("/products", handlers.PostProduct)
+	e.DELETE("/products", handlers.DeleleProduct)
+	e.PUT("/products/:id", handlers.UpdateProduct)
+
+	e.GET("/statuses", handlers.GetAllStatus)
+	e.GET("/statuses/:id", handlers.GetStatusId)
+	e.POST("/statuses", handlers.PostStatus)
+	e.DELETE("/statuses", handlers.DeleleStatus)
+	e.PUT("/statuses/:id", handlers.UpdateStatus)
 
 	e.Logger.Fatal(e.Start(":8080"))
 }

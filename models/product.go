@@ -4,8 +4,8 @@ import (
 	"gorm.io/gorm"
 )
 
-type Order struct {
+type Product struct {
 	gorm.Model
-	FullName string
-	Status   Status
+	Name  string
+	Priсe uint
 }
