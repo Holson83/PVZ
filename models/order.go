@@ -7,5 +7,6 @@ import (
 type Order struct {
 	gorm.Model
 	FullName string
+	StatusID uint
 	Status   Status
 }

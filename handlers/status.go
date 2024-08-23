@@ -28,8 +28,8 @@ func GetStatusId(c echo.Context) error {
 	return c.JSON(http.StatusOK, status)
 }
 
-func PostStatus(c echo.Context) error {
-	status := models.Status{Type: c.FormValue("status")}
+func CreateStatus(c echo.Context) error {
+	status := models.Status{Type: c.FormValue("statusType")}
 
 	db.Create(&status)
 
@@ -38,6 +38,7 @@ func PostStatus(c echo.Context) error {
 
 func UpdateStatus(c echo.Context) error {
 	var status models.Status
+
 	db.Take(&status, c.Param("id"))
 
 	if status.ID == 0 {
@@ -61,5 +62,6 @@ func DeleleStatus(c echo.Context) error {
 	}
 
 	db.Delete(&status)
+
 	return c.String(http.StatusOK, "Delete status")
 }

@@ -30,18 +30,20 @@ func GetProductId(c echo.Context) error {
 	return c.JSON(http.StatusOK, product)
 }
 
-func PostProduct(c echo.Context) error {
-	name := c.FormValue("name")
-	price := utilities.StringToUint(c.FormValue("price"))
-
-	product := models.Product{Name: name, Priсe: price}
+func CreateProduct(c echo.Context) error {
+	product := models.Product{
+		Name:  c.FormValue("name"),
+		Priсe: utilities.StringToUint(c.FormValue("price")),
+	}
 
 	db.Create(&product)
+
 	return c.String(http.StatusCreated, "Product created")
 }
 
 func UpdateProduct(c echo.Context) error {
 	var product models.Product
+
 	db.Take(&product, c.Param("id"), c.Param("priсe"))
 
 	if product.ID == 0 {
@@ -66,5 +68,6 @@ func DeleleProduct(c echo.Context) error {
 	}
 
 	db.Delete(&product)
+
 	return c.String(http.StatusOK, "Delete product")
 }
