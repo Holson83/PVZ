@@ -71,3 +71,27 @@ func DeleleProduct(c echo.Context) error {
 
 	return c.String(http.StatusOK, "Delete product")
 }
+
+// func OrderProduct(c echo.Context) error {
+// 	var (
+// 		order   models.Order
+// 		product models.Product
+// 	)
+
+// 	db.Take(&order, c.Param("id"))
+// 	db.Take(&product, c.FormValue("name"), c.FormValue("price"))
+
+// 	if order.ID == 0 {
+// 		return c.String(http.StatusNotFound, "Order not found")
+// 	}
+
+// 	if product.ID == 0 {
+// 		return c.String(http.StatusBadRequest, "Status not found")
+// 	}
+
+// 	product.Order = order
+
+// 	db.Save(&product)
+
+// 	return c.JSON(http.StatusOK, product)
+// }

@@ -8,4 +8,5 @@ type Product struct {
 	gorm.Model
 	Name  string
 	Priсe uint
+	Order []Order
 }
