@@ -6,7 +6,7 @@ import (
 
 type Product struct {
 	gorm.Model
-	Name  string
-	Priсe uint
-	Order []Order
+	Name   string
+	Priсe  uint
+	Orders []Order `gorm:"many2many:order_product;"`
 }

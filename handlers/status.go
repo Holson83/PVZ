@@ -29,7 +29,7 @@ func GetStatusId(c echo.Context) error {
 }
 
 func CreateStatus(c echo.Context) error {
-	status := models.Status{Type: c.FormValue("statusType")}
+	status := models.Status{Type: c.FormValue("type")}
 
 	db.Create(&status)
 

@@ -11,7 +11,7 @@ import (
 func GetAllOrder(c echo.Context) error {
 	var orders []models.Order
 
-	db.Find(&orders)
+	db.Preload("Status").Preload("Products").Find(&orders)
 
 	return c.JSON(http.StatusOK, orders)
 }
@@ -19,7 +19,7 @@ func GetAllOrder(c echo.Context) error {
 func GetOrderId(c echo.Context) error {
 	var order models.Order
 
-	db.Preload("Status").Take(&order, c.Param("id"))
+	db.Preload("Status").Preload("Products").Take(&order, c.Param("id"))
 
 	if order.ID == 0 {
 		return c.NoContent(http.StatusNotFound)
@@ -52,7 +52,7 @@ func UpdateOrder(c echo.Context) error {
 	return c.JSON(http.StatusOK, order)
 }
 
-func DeleleOrder(c echo.Context) error {
+func DeleteOrder(c echo.Context) error {
 	var order models.Order
 
 	db.Take(&order, c.Param("id"))
@@ -73,7 +73,7 @@ func SetOrderStatus(c echo.Context) error {
 	)
 
 	db.Take(&order, c.Param("id"))
-	db.Take(&status, c.FormValue("type"))
+	db.Take(&status, c.FormValue("statusId"))
 
 	if order.ID == 0 {
 		return c.String(http.StatusNotFound, "Order not found")
@@ -84,6 +84,30 @@ func SetOrderStatus(c echo.Context) error {
 	}
 
 	order.Status = status
+
+	db.Save(&order)
+
+	return c.JSON(http.StatusOK, order)
+}
+
+func AddProductOrder(c echo.Context) error {
+	var (
+		order   models.Order
+		product models.Product
+	)
+
+	db.Take(&order, c.Param("id"))
+	db.Take(&product, c.FormValue("productId"))
+
+	if order.ID == 0 {
+		return c.String(http.StatusNotFound, "Order not found")
+	}
+
+	if product.ID == 0 {
+		return c.String(http.StatusBadRequest, "Product not found")
+	}
+
+	order.Products = append(order.Products, product)
 
 	db.Save(&order)
 

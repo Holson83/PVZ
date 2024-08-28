@@ -25,7 +25,15 @@ func connectDB() *gorm.DB {
 		panic("failed to connect database")
 	}
 
-	_ = db.AutoMigrate(&models.Order{}, &models.Product{}, &models.Status{})
+	_ = db.AutoMigrate(
+		&models.Order{},
+		&models.Product{},
+		&models.Status{},
+		&models.Basket{},
+		&models.ProductBasket{},
+	)
+
+	_ = db.SetupJoinTable(&models.Basket{}, "Products", &models.ProductBasket{})
 
 	dbConnection = db
 
